@@ -34,7 +34,7 @@ app.post('/gitlab', (req, res) => {
      method: 'POST',
      url: webhook,
      json: {
-       username: 'Jira listener',
+       username: 'GitLab listener',
        content: content
      }}, (err, ret, body) => {
        console.log('err =', err);
@@ -47,7 +47,7 @@ app.post('/gitlab', (req, res) => {
      method: 'POST',
      url: webhook,
      json: {
-       username: 'Gitlab listener',
+       username: 'GitLab listener',
        content: 'something happen'
      }}, (err, ret, body) => {
        console.log('err =', err);
@@ -79,7 +79,7 @@ app.post('/jira', (req, res) => {
     method: 'POST',
     url: webhook,
     json: {
-      username: 'Jira listener',
+      username: 'JIRA listener',
       content: content
     }}, (err, ret, body) => {
       console.log('err =', err);
@@ -92,7 +92,7 @@ app.post('/jira', (req, res) => {
     method: 'POST',
     url: webhook,
     json: {
-      username: 'Jira listener',
+      username: 'JIRA listener',
       content: 'something happen'
     }}, (err, ret, body) => {
       console.log('err =', err);
