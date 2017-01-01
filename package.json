@@ -1,0 +1,23 @@
+{
+  "name": "palpus-discord",
+  "version": "1.0.0",
+  "description": "webhooks for discord",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/VladislavAnkudinov/palpus-discord.git"
+  },
+  "keywords": [
+    "webhooks",
+    "discord"
+  ],
+  "author": "Vladislav Ankudinov",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/VladislavAnkudinov/palpus-discord#readme",
+  "dependencies": {
+    "dotenv": "^2.0.0"
+  }
+}
