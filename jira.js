@@ -18,22 +18,21 @@ module.exports = webhooks => (req, res) => {
       + `\`${change.fromString}\` => \`${change.toString}\`\n`
   }
   console.log('content =', content);
-  return Promise.all(webhooks.map(
-    (webhook, idx) => new Promise((resolve, reject) => {
-      request({
-        method: 'POST',
-        url: webhook,
-        json: {
-          username: 'JIRA listener',
-          content: content
-        }
-      }, (err, ret, body) => {
-        console.log('err =', err);
-        if (err) return reject(error);
-        resolve(req.body);
-      });
-    })
-  ))
+  return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
+    console.log('JIRA webhook =', webhook)
+    request({
+      method: 'POST',
+      url: webhook,
+      json: {
+        username: 'JIRA listener',
+        content: content
+      }
+    }, (err, ret, body) => {
+      console.log('err =', err);
+      if (err) return reject(error);
+      resolve(req.body);
+    });
+  })))
   .then(() => {
     res.status(200).send(req.body);
   })
