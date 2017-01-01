@@ -1,3 +1,5 @@
+var request = require('request');
+
 module.exports = webhook => (req, res) => {
   //console.log('req.body =', req.body);
   if (req.body && req.body.webhookEvent == 'jira:issue_updated') {

@@ -1,3 +1,5 @@
+var request = require('request');
+
 module.exports = webhook => (req, res) => {
   if (req.body && req.body.webhookEvent == 'jira:issue_updated') {
     let userEmail = req.body.user && req.body.user.emailAddress;
