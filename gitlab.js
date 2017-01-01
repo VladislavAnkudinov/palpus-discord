@@ -17,9 +17,9 @@ module.exports = webhooks => (req, res) => {
     content = `Repo \`${repoName}\`: \`${repoHomepage}\`\n`
      + `updated by user \`${userEmail}\` ${userAvatar}\n`
      + `commit \`${commit.id}\`: \`${commit.message}\`\n`
-     + `added: \` ${commit.added} \`\n`
-     + `modified: \` ${commit.modified} \`\n`
-     + `removed: \` ${commit.removed} \`\n`
+     + `added: \`[${commit.added}]\`\n`
+     + `modified: \`[${commit.modified}]\`\n`
+     + `removed: \`[${commit.removed}]\`\n`
   }
   console.log('content =', content);
   return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
