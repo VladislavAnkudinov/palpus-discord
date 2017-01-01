@@ -43,6 +43,8 @@ app.post('/gitlab', (req, res) => {
        res.status(200).send(req.body);
      });
   } else {
+    let reqBody = JSON.stringify(req.body);
+    console.log('GitLab req.body =', reqBody);
     request({
      method: 'POST',
      url: webhook,
