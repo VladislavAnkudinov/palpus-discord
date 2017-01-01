@@ -37,7 +37,7 @@ app.post('/jira', (req, res) => {
     url: webhook,
     json: {
       username: 'Jira listener',
-      content: content;
+      content: content
     }}, (err, ret, body) => {
       console.log('err =', err);
       //console.log('ret =', ret);
