@@ -35,8 +35,8 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/gitlab', require('./gitlab.js')(jiraHooks));
-app.post('/jira', require('./jira.js')(gitlabHooks));
+app.post('/gitlab', require('./gitlab.js')(gitlabHooks));
+app.post('/jira', require('./jira.js')(jiraHooks));
 
 app.post('/webhook', (req, res) => {
   console.log('req =', req.body);
