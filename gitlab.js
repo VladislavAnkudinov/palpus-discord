@@ -1,20 +1,24 @@
 var request = require('request');
 
 module.exports = webhook => (req, res) => {
-  if (req.body && req.body.webhookEvent == 'jira:issue_updated') {
-    let userEmail = req.body.user && req.body.user.emailAddress;
+  if (req.body && req.body.object_kind == 'push') {
+    let userEmail = req.body.user_email;
     console.log('userEmail =', userEmail);
-    let issueKey = req.body.issue && req.body.issue.key;
-    console.log('issueKey =', issueKey);
-    let issueSummary = req.body.issue && req.body.issue.fields && req.body.issue.fields.summary;
-    console.log('issueSummary =', issueSummary);
-    let changes = req.body.changelog && req.body.changelog.items;
-    console.log('changes =', changes);
-    let change = (changes || [])[0] || {};
-    let content = `Issue \`${issueKey}\`: \`${issueSummary}\`\n`
-     + `updated by user \`${userEmail}\`\n`
-     + `field \`${change.field}\` changed\n`
-     + `\`${change.fromString}\` => \`${change.toString}\`\n`
+    let userAvatar = req.body.user_avatar;
+    console.log('userAvatar =', userAvatar);
+    let repoName = req.body.repository && req.body.repository.name;
+    console.log('repoName =', repoName);
+    let repoHomepage = req.body.repository && req.body.repository.homepage;
+    console.log('repoHomepage =', repoHomepage);
+    let commits = req.body.commits;
+    console.log('commits =', commits);
+    let commit = (commits || [])[0] || {};
+    let content = `Repo \`${repoName}\`: \`${repoHomepage}\`\n`
+     + `updated by user \`${userEmail}\` ${userAvatar}\n`
+     + `commit \`${commit.id}\`: \`${commit.message}\`\n`
+     + `added: \`${commit.added}\`\n`
+     + `modified: \`${commit.modified}\`\n`
+     + `removed: \`${commit.removed}\`\n`
     console.log('content =', content);
     request({
      method: 'POST',
