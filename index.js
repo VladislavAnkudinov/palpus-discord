@@ -26,10 +26,10 @@ app.post('/jira', (req, res) => {
    let changes = req.body.changelog && req.body.changelog.items;
    console.log('changes =', changes);
    let change = (changes || [])[0] || {};
-   let content = `Issue \`${issueKey}\` updated by user \`${userEmail}\`\n`
+   let content = `Issue \`${issueKey}\`, summary: \`${issueSummary}\``
+    + `updated by user \`${userEmail}\`\n`
     + `field \`${change.field}\` changed\n`
     + `\`${change.fromString}\` => \`${change.toString}\`\n`
-    + `Summary: \`${issueSummary}\``
    console.log('content =', content);
    request({
     method: 'POST',
