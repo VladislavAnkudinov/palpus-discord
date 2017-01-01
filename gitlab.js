@@ -22,8 +22,8 @@ module.exports = webhooks => (req, res) => {
      + `removed: \` ${commit.removed} \`\n`
   }
   console.log('content =', content);
-  return Promise.all(webhooks.map((webhook, idx) => {
-    promises.push(new Promise(resolve, reject) => {
+  return Promise.all(webhooks.map(
+    (webhook, idx) => new Promise((resolve, reject) => {
       request({
         method: 'POST',
         url: webhook,
@@ -36,8 +36,8 @@ module.exports = webhooks => (req, res) => {
         if (err) return reject(error);
         resolve(req.body);
       });
-    });
-  }))
+    })
+  ))
   .then(() => {
     res.status(200).send(req.body);
   })
