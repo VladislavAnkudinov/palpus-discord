@@ -1,7 +1,7 @@
 var request = require('request');
 
-module.exports = webhook => (req, res) => {
-  //console.log('req.body =', req.body);
+module.exports = webhooks => (req, res) => {
+  let content = 'something happen';
   if (req.body && req.body.webhookEvent == 'jira:issue_updated') {
     let userEmail = req.body.user && req.body.user.emailAddress;
     console.log('userEmail =', userEmail);
@@ -12,35 +12,32 @@ module.exports = webhook => (req, res) => {
     let changes = req.body.changelog && req.body.changelog.items;
     console.log('changes =', changes);
     let change = (changes || [])[0] || {};
-    let content = `Issue \`${issueKey}\`: \`${issueSummary}\`\n`
+    content = `Issue \`${issueKey}\`: \`${issueSummary}\`\n`
       + `updated by user \`${userEmail}\`\n`
       + `field \`${change.field}\` changed\n`
       + `\`${change.fromString}\` => \`${change.toString}\`\n`
-    console.log('content =', content);
-    request({
-      method: 'POST',
-      url: webhook,
-      json: {
-        username: 'JIRA listener',
-        content: content
-      }}, (err, ret, body) => {
-        console.log('err =', err);
-        //console.log('ret =', ret);
-        if (err) res.error(err);
-        res.status(200).send(req.body);
-      });
-  } else {
-   request({
-    method: 'POST',
-    url: webhook,
-    json: {
-      username: 'JIRA listener',
-      content: 'something happen'
-    }}, (err, ret, body) => {
-      console.log('err =', err);
-      //console.log('ret =', ret);
-      if (err) res.error(err);
-      res.status(200).send(req.body);
-    });
   }
+  console.log('content =', content);
+  return Promise.all(webhooks.map((webhook, idx) => {
+    promises.push(new Promise(resolve, reject) => {
+      request({
+        method: 'POST',
+        url: webhook,
+        json: {
+          username: 'JIRA listener',
+          content: content
+        }
+      }, (err, ret, body) => {
+        console.log('err =', err);
+        if (err) return reject(error);
+        resolve(req.body);
+      });
+    });
+  }))
+  .then(() => {
+    res.status(200).send(req.body);
+  })
+  .catch(() => {
+    res.error(err);
+  })
 }

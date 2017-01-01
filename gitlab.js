@@ -1,6 +1,7 @@
 var request = require('request');
 
-module.exports = webhook => (req, res) => {
+module.exports = webhooks => (req, res) => {
+  let content = 'something happen';
   if (req.body && req.body.object_kind == 'push') {
     let userEmail = req.body.user_email;
     console.log('userEmail =', userEmail);
@@ -16,36 +17,31 @@ module.exports = webhook => (req, res) => {
     let content = `Repo \`${repoName}\`: \`${repoHomepage}\`\n`
      + `updated by user \`${userEmail}\` ${userAvatar}\n`
      + `commit \`${commit.id}\`: \`${commit.message}\`\n`
-     + `added: \`${commit.added}\`\n`
-     + `modified: \`${commit.modified}\`\n`
-     + `removed: \`${commit.removed}\`\n`
-    console.log('content =', content);
-    request({
-     method: 'POST',
-     url: webhook,
-     json: {
-       username: 'GitLab listener',
-       content: content
-     }}, (err, ret, body) => {
-       console.log('err =', err);
-       //console.log('ret =', ret);
-       if (err) res.error(err);
-       res.status(200).send(req.body);
-     });
-  } else {
-    let reqBody = JSON.stringify(req.body);
-    console.log('GitLab req.body =', reqBody);
-    request({
-     method: 'POST',
-     url: webhook,
-     json: {
-       username: 'GitLab listener',
-       content: 'something happen'
-     }}, (err, ret, body) => {
-       console.log('err =', err);
-       //console.log('ret =', ret);
-       if (err) res.error(err);
-       res.status(200).send(req.body);
-     });
+     + `added: \` ${commit.added} \`\n`
+     + `modified: \` ${commit.modified} \`\n`
+     + `removed: \` ${commit.removed} \`\n`
   }
+  console.log('content =', content);
+  return Promise.all(webhooks.map((webhook, idx) => {
+    promises.push(new Promise(resolve, reject) => {
+      request({
+        method: 'POST',
+        url: webhook,
+        json: {
+          username: 'GitLab listener',
+          content: content
+        }
+      }, (err, ret, body) => {
+        console.log('err =', err);
+        if (err) return reject(error);
+        resolve(req.body);
+      });
+    });
+  }))
+  .then(() => {
+    res.status(200).send(req.body);
+  })
+  .catch(() => {
+    res.error(err);
+  })
 }

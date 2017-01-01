@@ -7,15 +7,29 @@ var app = express();
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
 
-var webhook = process.env.DISCORD_WEBHOOK;
-console.log('DISCORD_WEBHOOK =', webhook);
+var webhooks = process.env.DISCORD_WEBHOOKS;
+console.log('DISCORD_WEBHOOKS =', webhooks);
+webhooks = webhooks.split(';');
+
+var jiraHooks = process.env.JIRA_HOOKS;
+console.log('JIRA_HOOKS =', jiraHooks);
+
+var gitlabHooks = process.env.GITLAB_HOOKS;
+console.log('GITLAB_HOOKS =', gitlabHooks);
+
+let filterHooks = (hooks, inexes) => {
+  return hooks.filter(idx => indexes.indexOf(idx) + 1);
+}
+
+jiraHooks = filterHooks(hooks, jiraHooks);
+gitlabHooks = filterHooks(hooks, gitlabHooks);
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/gitlab', require('./gitlab.js')(webhook));
-app.post('/jira', require('./jira.js')(webhook));
+app.post('/gitlab', require('./gitlab.js')(jiraHooks));
+app.post('/jira', require('./jira.js')(gitlabHooks));
 
 app.post('/webhook', (req, res) => {
   console.log('req =', req.body);
