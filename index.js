@@ -17,20 +17,19 @@ app.get('/', (req, res) => {
 app.post('/jira', (req, res) => {
  //console.log('req.body =', req.body);
  if (req.body && req.body.webhookEvent == 'jira:issue_updated') {
-   let userEmail = req.body.user && req.body.user.userEmail;
+   let userEmail = req.body.user && req.body.user.emailAddress;
    console.log('userEmail =', userEmail);
    let issueKey = req.body.issue && req.body.issue.key;
    console.log('issueKey =', issueKey);
-   let issueSummary = req.body.issue && req.body.fields && req.body.fields.summary;
+   let issueSummary = req.body.issue && req.body.issue.fields && req.body.issue.fields.summary;
    console.log('issueSummary =', issueSummary);
-   let changes = req.body.issue && req.body.changelog && req.body.changelog.items;
+   let changes = req.body.changelog && req.body.changelog.items;
    console.log('changes =', changes);
    let change = (changes || [])[0] || {};
-   let content = `Issue ${issueKey} updated by user ${userEmail}:\n`
-    + `field "${change.field}" changed\n`
-    + `from "${change.fromString}"\n`
-    + `to "${change.toString}".\n`
-    + `Summary: ${issueSummary}`
+   let content = `Issue \`${issueKey}\` updated by user \`${userEmail}\`\n`
+    + `field \`${change.field}\` changed\n`
+    + `\`${change.fromString}\` => \`${change.toString}\`\n`
+    + `Summary: \`${issueSummary}\``
    console.log('content =', content);
    request({
     method: 'POST',
