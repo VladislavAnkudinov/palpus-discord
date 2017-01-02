@@ -54,6 +54,7 @@ module.exports = webhooks => (req, res) => {
       + `build name: \`[${build.name}]\`\n`
       + `build stage: \`[${build.stage}]\`\n`
       + `build status: \`[${build.status}]\`\n`;
+    content = '';
   } else if (req.body && req.body.object_kind == 'build') {
     let userEmail = req.body.user && req.body.user.email;
     console.log('userEmail =', userEmail);
@@ -70,8 +71,10 @@ module.exports = webhooks => (req, res) => {
       + `build name: \`[${req.body.build_name}]\`\n`
       + `build stage: \`[${req.body.build_stage}]\`\n`
       + `build status: \`[${req.body.build_status}]\`\n`;
+    content = '';
   }
   console.log('content =', content);
+  if (!content) webhooks = [];
   return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
     console.log('GitLab webhook =', webhook);
     request({
