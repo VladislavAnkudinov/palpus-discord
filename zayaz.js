@@ -1,3 +1,5 @@
+var request = require('request');
+
 module.exports = webhooks => (req, res) => {
   return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
     console.log('Zayaz webhook =', webhook)
