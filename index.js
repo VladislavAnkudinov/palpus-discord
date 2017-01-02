@@ -12,6 +12,11 @@ console.log('DISCORD_WEBHOOKS =', webhooks);
 webhooks = webhooks.split(';').map(item => item.trim());
 console.log('webhooks =', webhooks);
 
+var zayazHooks = process.env.ZAYAZ_HOOKS;
+console.log('ZAYAZ_HOOKS =', zayazHooks);
+gitlabHooks = zayazHooks.split(',').map(item => item.trim());
+console.log('zayazHooks =', zayazHooks);
+
 var jiraHooks = process.env.JIRA_HOOKS;
 console.log('JIRA_HOOKS =', jiraHooks);
 jiraHooks = jiraHooks.split(',').map(item => item.trim());
@@ -26,6 +31,8 @@ let filterHooks = (hooks, indexes) => {
   return indexes.map(idx => hooks[idx])
 }
 
+zayazHooks = filterHooks(webhooks, zayazHooks);
+console.log('zayazHooks =', zayazHooks);
 jiraHooks = filterHooks(webhooks, jiraHooks);
 console.log('jiraHooks =', jiraHooks);
 gitlabHooks = filterHooks(webhooks, gitlabHooks);
@@ -37,19 +44,7 @@ app.get('/', (req, res) => {
 
 app.post('/gitlab', require('./gitlab.js')(gitlabHooks));
 app.post('/jira', require('./jira.js')(jiraHooks));
-
-app.post('/webhook', (req, res) => {
-  console.log('req =', req.body);
-  request({
-    method: 'POST',
-    url: webhook,
-    json: {
-      content: req.body.msg,
-      username: 'palpus-discord'
-    }
-  });
-  res.redirect('/');
-});
+app.post('/zayaz', require('./zayaz.js')(zayazHooks));
 
 app.listen(3000, () => {
   console.log('Server started!');
