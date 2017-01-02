@@ -11,8 +11,8 @@ module.exports = webhooks => (req, res) => {
   }
   bodies.jira = bodies.jira || {};
   bodies.jira[req.body.webhookEvent] = bodies.jira[req.body.webhookEvent] || {};
-  bodies.jira[req.body.webhookEvent][req.body.issue_event_type_name] = JSON.stringify(req.body);
-  fs.writeFileSync('bodies.json', JSON.stringify(bodies));
+  bodies.jira[req.body.webhookEvent][req.body.issue_event_type_name] = req.body;
+  fs.writeFileSync('bodies.json', JSON.stringify(bodies, null, '  '));
   let content = '.';
   if (req.body && req.body.webhookEvent == 'jira:issue_updated') {
     let userEmail = req.body.user && req.body.user.emailAddress;
