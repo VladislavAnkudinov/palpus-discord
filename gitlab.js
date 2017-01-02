@@ -50,7 +50,7 @@ module.exports = webhooks => (req, res) => {
       + `run pipeline by user \`${userName}\`\n`
       + `for commit \`${commit.id}\`: \`${commit.message}\`\n`
       + `by user \`${commit.author && commit.author.email}\`\n`
-      + `build description: \`${buildDescription} \``
+      + `build description: \`[${buildDescription}]\`\n`
       + `build name: \`[${build.name}]\`\n`
       + `build stage: \`[${build.stage}]\`\n`
       + `build status: \`[${build.status}]\`\n`;
