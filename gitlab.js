@@ -2,12 +2,12 @@ var request = require('request');
 var fs = require('fs');
 
 module.exports = webhooks => (req, res) => {
-  let bodies = fs.readFyleSync('bodies.json');
+  let bodies = fs.readFileSync('bodies.json');
   bodies = JSON.parse(bodies);
   bodies.gitlab = bodies.gitlab || {};
   bodies.gitlab[req.body.object_kind] = bodies.gitlab[req.body.object_kind] || {};
   bodies.gitlab[req.body.object_kind][req.body.event_name] = JSON.stringify(req.body);
-  fs.writeFyleSync('bodies.json', bodies);
+  fs.writeFileSync('bodies.json', bodies);
   let content = '.';
   if (req.body && req.body.object_kind == 'push') {
     let userEmail = req.body.user_email;

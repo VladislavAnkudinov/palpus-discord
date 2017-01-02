@@ -1,12 +1,13 @@
 var request = require('request');
+var fs = require('fs');
 
 module.exports = webhooks => (req, res) => {
-  let bodies = fs.readFyleSync('bodies.json');
+  let bodies = fs.readFileSync('bodies.json');
   bodies = JSON.parse(bodies);
   bodies.jira = bodies.jira || {};
   bodies.jira[req.body.webhookEvent] = bodies.jira[req.body.webhookEvent] || {};
   bodies.jira[req.body.webhookEvent][req.body.issue_event_type_name] = JSON.stringify(req.body);
-  fs.writeFyleSync('bodies.json', bodies);
+  fs.writeFileSync('bodies.json', bodies);
   let content = '.';
   if (req.body && req.body.webhookEvent == 'jira:issue_updated') {
     let userEmail = req.body.user && req.body.user.emailAddress;
