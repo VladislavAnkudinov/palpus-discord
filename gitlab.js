@@ -54,7 +54,7 @@ module.exports = webhooks => (req, res) => {
       + `build name: \`[${build.name}]\`\n`
       + `build stage: \`[${build.stage}]\`\n`
       + `build status: \`[${build.status}]\`\n`;
-  } else if (req.body && req.body.object_kind = 'build') {
+  } else if (req.body && req.body.object_kind == 'build') {
     let userEmail = req.body.user && req.body.user.email;
     console.log('userEmail =', userEmail);
     let repoName = req.body.repository && req.body.repository.name;
