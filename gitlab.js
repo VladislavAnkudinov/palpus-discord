@@ -12,7 +12,7 @@ module.exports = webhooks => (req, res) => {
   bodies.gitlab = bodies.gitlab || {};
   bodies.gitlab[req.body.object_kind] = bodies.gitlab[req.body.object_kind] || {};
   bodies.gitlab[req.body.object_kind][req.body.event_name] = JSON.stringify(req.body);
-  fs.writeFileSync('bodies.json', bodies);
+  fs.writeFileSync('bodies.json', JSON.stringify(bodies));
   let content = '.';
   if (req.body && req.body.object_kind == 'push') {
     let userEmail = req.body.user_email;
