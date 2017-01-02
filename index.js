@@ -14,7 +14,7 @@ console.log('webhooks =', webhooks);
 
 var zayazHooks = process.env.ZAYAZ_HOOKS;
 console.log('ZAYAZ_HOOKS =', zayazHooks);
-gitlabHooks = zayazHooks.split(',').map(item => item.trim());
+zayazHooks = zayazHooks.split(',').map(item => item.trim());
 console.log('zayazHooks =', zayazHooks);
 
 var jiraHooks = process.env.JIRA_HOOKS;
