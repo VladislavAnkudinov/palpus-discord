@@ -32,7 +32,7 @@ module.exports = webhooks => (req, res) => {
       + `commit \`${commit.id}\`: \`${commit.message}\`\n`
       + `added: \`[${commit.added}]\`\n`
       + `modified: \`[${commit.modified}]\`\n`
-      + `removed: \`[${commit.removed}]\`\n`
+      + `removed: \`[${commit.removed}]\`\n`;
   } else if (req.body && req.body.object_kind == 'pipeline') {
     let userName = req.body.user && req.body.user.username;
     console.log('userName =', userName);
@@ -47,16 +47,33 @@ module.exports = webhooks => (req, res) => {
     let buildDescription = build.runner && build.runner.description;
     content = `PIPELINE: repo \`${projectName}\`: ${projectWebUrl}\n`
       //+ `updated by user \`${userEmail}\` ${userAvatar}\n`
-      + `run pipeline by user \`${commit.author && commit.author.email}\`\n`
+      + `run pipeline by user \`${userName}\`\n`
       + `for commit \`${commit.id}\`: \`${commit.message}\`\n`
+      + `by user \`${commit.author && commit.author.email}\`\n`
       + `build description: \`${buildDescription} \``
-      + `build stage: \`[${build.stage}]\`\n`
       + `build name: \`[${build.name}]\`\n`
-      + `build status: \`[${build.status}]\`\n`
+      + `build stage: \`[${build.stage}]\`\n`
+      + `build status: \`[${build.status}]\`\n`;
+  } else if (req.body && req.body.object_kind = 'build') {
+    let userEmail = req.body.user && req.body.user.email;
+    console.log('userEmail =', userEmail);
+    let repoName = req.body.repository && req.body.repository.name;
+    console.log('repoName =', repoName);
+    let repoHomepage = req.body.repository && req.body.repository.homepage;
+    console.log('repoHomepage =', repoHomepage);
+    let commit = req.body.commit || {};
+    content = `BUILD: repo \`${repoName}\`: ${repoHomepage}\n`
+      //+ `updated by user \`${userEmail}\` ${userAvatar}\n`
+      + `run build by user \`${userEmail}\`\n`
+      + `for commit \`${commit.id}\`: \`${commit.message}\`\n`
+      + `by user \`${commit.author_name && commit.author_email}\`\n`
+      + `build name: \`[${req.body.build_name}]\`\n`
+      + `build stage: \`[${req.body.build_stage}]\`\n`
+      + `build status: \`[${req.body.build_status}]\`\n`;
   }
   console.log('content =', content);
   return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
-    console.log('GitLab webhook =', webhook)
+    console.log('GitLab webhook =', webhook);
     request({
       method: 'POST',
       url: webhook,
