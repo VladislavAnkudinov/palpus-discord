@@ -2,12 +2,13 @@ var request = require('request');
 var fs = require('fs');
 
 module.exports = webhooks => (req, res) => {
+  let bodies;
   try {
-    let bodies = fs.readFileSync('bodies.json');
+    bodies = String(fs.readFileSync('bodies.json'));
+    bodies = JSON.parse(bodies);
   } catch (e) {
-    let bodies = {};
+    bodies = {};
   }
-  bodies = JSON.parse(bodies);
   bodies.gitlab = bodies.gitlab || {};
   bodies.gitlab[req.body.object_kind] = bodies.gitlab[req.body.object_kind] || {};
   bodies.gitlab[req.body.object_kind][req.body.event_name] = JSON.stringify(req.body);
