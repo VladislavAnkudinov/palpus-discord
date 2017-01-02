@@ -26,13 +26,33 @@ module.exports = webhooks => (req, res) => {
     let commits = req.body.commits;
     console.log('commits =', commits);
     let commit = (commits || [])[0] || {};
-    content = `Repo \`${repoName}\`: ${repoHomepage}\n`
-     //+ `updated by user \`${userEmail}\` ${userAvatar}\n`
-     + `updated by user \`${commit.author && commit.author.email}\`\n`
-     + `commit \`${commit.id}\`: \`${commit.message}\`\n`
-     + `added: \`[${commit.added}]\`\n`
-     + `modified: \`[${commit.modified}]\`\n`
-     + `removed: \`[${commit.removed}]\`\n`
+    content = `PUSH: repo \`${repoName}\`: ${repoHomepage}\n`
+      //+ `updated by user \`${userEmail}\` ${userAvatar}\n`
+      + `updated by user \`${commit.author && commit.author.email}\`\n`
+      + `commit \`${commit.id}\`: \`${commit.message}\`\n`
+      + `added: \`[${commit.added}]\`\n`
+      + `modified: \`[${commit.modified}]\`\n`
+      + `removed: \`[${commit.removed}]\`\n`
+  } else if (req.body && req.body.object_kind == 'pipeline') {
+    let userName = req.body.user && req.body.user.username;
+    console.log('userName =', userName);
+    let avatarUrl = req.body.user && req.body.user.avatar_url;
+    console.log('avatarUrl =', avatarUrl);
+    let projectName = req.body.project && req.body.project.name;
+    console.log('projectName =', projectName);
+    let projectWebUrl = req.body.project && req.body.project.web_url;
+    console.log('projectWebUrl =', projectWebUrl);
+    let commit = req.body.commit || {};
+    let build = (req.body.builds || [])[0] || {};
+    let buildDescription = build.runner && build.runner.description;
+    content = `PIPELINE: repo \`${projectName}\`: ${projectWebUrl}\n`
+      //+ `updated by user \`${userEmail}\` ${userAvatar}\n`
+      + `run pipeline by user \`${commit.author && commit.author.email}\`\n`
+      + `for commit \`${commit.id}\`: \`${commit.message}\`\n`
+      + `build description: \`${buildDescription} \``
+      + `build stage: \`[${build.stage}]\`\n`
+      + `build name: \`[${build.name}]\`\n`
+      + `build status: \`[${build.status}]\`\n`
   }
   console.log('content =', content);
   return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
@@ -50,10 +70,10 @@ module.exports = webhooks => (req, res) => {
       resolve(req.body);
     });
   })))
-  .then(() => {
-    res.status(200).send(req.body);
-  })
-  .catch(() => {
-    res.error(err);
-  })
-}
+    .then(() => {
+      res.status(200).send(req.body);
+    })
+    .catch(() => {
+      res.error(err);
+    })
+};
