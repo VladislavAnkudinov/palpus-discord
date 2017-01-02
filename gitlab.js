@@ -74,7 +74,7 @@ module.exports = webhooks => (req, res) => {
     content = '';
   }
   console.log('content =', content);
-  if (!content) webhooks = [];
+  if (!content) return res.status(200).send(req.body);
   return Promise.all(webhooks.map(webhook => new Promise((resolve, reject) => {
     console.log('GitLab webhook =', webhook);
     request({
