@@ -16,7 +16,7 @@ module.exports = webhooks => (req, res) => {
     let commit = (commits || [])[0] || {};
     content = `Repo \`${repoName}\`: ${repoHomepage}\n`
      //+ `updated by user \`${userEmail}\` ${userAvatar}\n`
-     + `updated by user \`${commit.author && commit.author.email}\` ${userAvatar}\n`
+     + `updated by user \`${commit.author && commit.author.email}\`\n`
      + `commit \`${commit.id}\`: \`${commit.message}\`\n`
      + `added: \`[${commit.added}]\`\n`
      + `modified: \`[${commit.modified}]\`\n`
