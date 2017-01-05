@@ -13,7 +13,7 @@ module.exports = webhooks => (req, res) => {
   bodies.gitlab[req.body.object_kind] = bodies.gitlab[req.body.object_kind] || {};
   bodies.gitlab[req.body.object_kind][req.body.event_name] = req.body;
   fs.writeFileSync('bodies.json', JSON.stringify(bodies, null, '  '));
-  let content = '.';
+  let content = '';
   if (req.body && req.body.object_kind == 'push') {
     let userEmail = req.body.user_email;
     console.log('userEmail =', userEmail);
@@ -54,7 +54,7 @@ module.exports = webhooks => (req, res) => {
       + `build name: \`[${build.name}]\`\n`
       + `build stage: \`[${build.stage}]\`\n`
       + `build status: \`[${build.status}]\`\n`;
-    content = '';
+    //content = '';
   } else if (req.body && req.body.object_kind == 'build') {
     let userEmail = req.body.user && req.body.user.email;
     console.log('userEmail =', userEmail);
@@ -71,7 +71,7 @@ module.exports = webhooks => (req, res) => {
       + `build name: \`[${req.body.build_name}]\`\n`
       + `build stage: \`[${req.body.build_stage}]\`\n`
       + `build status: \`[${req.body.build_status}]\`\n`;
-    content = '';
+    //content = '';
   }
   console.log('content =', content);
   if (!content) return res.status(200).send(req.body);
